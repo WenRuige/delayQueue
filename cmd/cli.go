@@ -1,10 +1,13 @@
 package cmd
 
+import (
+	"queue/core"
+	"queue/model"
+)
 
 type Cmd struct {
-
 }
 
-func (cmd * Cmd) Run(){
-	println("hello world")
+func (cmd *Cmd) Run() {
+	core.Push(model.Job{})
 }
