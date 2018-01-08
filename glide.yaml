@@ -1,0 +1,7 @@
+package: queue
+import:
+- package: github.com/huandu/go-sqlbuilder
+- package: github.com/garyburd/redigo
+  version: ~1.4.0
+  subpackages:
+  - redis

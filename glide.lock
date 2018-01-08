@@ -1,0 +1,10 @@
+hash: 256dd66a0456d5ee6c4dd33a2f3fbb6df1f3fd4689804fed4789d1c393b52e7c
+updated: 2018-01-08T16:57:10.197948843+08:00
+imports:
+- name: github.com/garyburd/redigo
+  version: d1ed5c67e5794de818ea85e6b522fda02623a484
+  subpackages:
+  - redis
+- name: github.com/huandu/go-sqlbuilder
+  version: e4805342660dd344e04e7171a85da4c74cb9d5a9
+testImports: []
