@@ -1,7 +1,8 @@
 package main
 
+import "queue/cmd"
+
 func main() {
-
-	println("hello world")
-
+	cmd := new(cmd.Cmd)
+	cmd.Run()
 }
