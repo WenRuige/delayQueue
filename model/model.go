@@ -1,4 +1,5 @@
 package model
+
 //状态码
 const (
 	Success = 0
@@ -14,9 +15,10 @@ type ResponseBody struct {
 
 //定时任务Job
 type Job struct {
-	Topic    string `json:"topic"`
-	Id       int `json:"id"`
-	Delay    int `json:"delay"`
-	Body     string `json:"body"`
-	Callback string `json:"callback"`
+	Topic      string `json:"topic"`
+	Id         int    `json:"id"`
+	Delay      int    `json:"delay"`
+	Body       string `json:"body"`
+	Callback   string `json:"callback"`
+	RetryTimes int    `json:"retry_times"`
 }
