@@ -22,3 +22,10 @@ type Job struct {
 	Callback   string `json:"callback"`
 	RetryTimes int    `json:"retry_times"`
 }
+
+
+//篮子
+type BucketItem struct {
+	Timestamp int `json:"timestamp"`
+	Jobid    int `json:"jobid"`
+}

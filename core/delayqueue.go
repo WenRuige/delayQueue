@@ -11,16 +11,18 @@ import (
 
 //
 func Init() {
-
+	Handler()
 }
 
 func getBucket() {
 
 }
 
-//从bucket中获取数据
-func getDataFromBucket() {
+func Handler() {
+	err := getDataFromBucket(config.DefaultBucketName)
+	if err != nil {
 
+	}
 }
 
 //创建一个timer 轮询bucket
