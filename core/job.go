@@ -11,7 +11,7 @@ func Init() {
 }
 
 // put job into job pool
-func putJob(jobId string, job model.Job) error {
+func putJob(jobId int, job model.Job) error {
 	res, err := json.Marshal(job)
 	if err != nil {
 		errors.New("Json解析失败")

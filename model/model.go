@@ -15,8 +15,8 @@ type ResponseBody struct {
 //定时任务Job
 type Job struct {
 	Topic    string `json:"topic"`
-	Id       string `json:"id"`
-	Delay    string `json:"delay"`
+	Id       int `json:"id"`
+	Delay    int `json:"delay"`
 	Body     string `json:"body"`
 	Callback string `json:"callback"`
 }
