@@ -2,9 +2,8 @@ package core
 
 import (
 	"queue/model"
-	//"errors"
-
 	"errors"
+	"log"
 )
 
 func Push(job model.Job) (error) {
@@ -24,8 +23,13 @@ func Push(job model.Job) (error) {
 	}
 	err := putJob(job.Id, job)
 	if err != nil {
-		errors.New("put job in redis error")
+		log.Printf("放入job poll error |%s", err.Error())
+		return err
 	}
-	pushBucket(job.Delay,job.Id)
+	err = pushBucket("bucket", job.Delay, job.Id)
+	if err != nil {
+		log.Printf("放入篮子error|%s", err.Error())
+		return err
+	}
 	return nil
 }
