@@ -6,9 +6,20 @@ import (
 	"log"
 	"math/rand"
 	"time"
+	"queue/config"
 )
+
 //
 func Init() {
+
+}
+
+func getBucket() {
+
+}
+
+//从bucket中获取数据
+func getDataFromBucket() {
 
 }
 
@@ -17,23 +28,14 @@ func Init() {
 //消费该id
 //回调该回调函数
 //回调成功后消除,若回调响应失败则进行重试
-//重试时间大于
-
-
-
-
-
-
-
-
-
+//重试次数&重试间隔
 
 func Push(job model.Job) (error) {
 	//data,err:=exec("get","samplekey");
 	//valueBytes := data.([]byte)
 	//str := string(valueBytes[:])
 	//if err!= nil{}
-	//println(str)
+	//@todo 对于这个id,应该是使用发号器来进行实现
 	job.Id = rand.New(rand.NewSource(time.Now().UnixNano())).Intn(100)
 	job.Topic = "TEST_TOPIC"
 	job.Delay = 30000
@@ -48,7 +50,8 @@ func Push(job model.Job) (error) {
 		log.Printf("放入job poll error |%s", err.Error())
 		return err
 	}
-	err = pushBucket("bucket", job.Delay, job.Id)
+	//默认的Bucket
+	err = pushBucket(config.DefaultBucketName, job.Delay, job.Id)
 	if err != nil {
 		log.Printf("放入篮子error|%s", err.Error())
 		return err
