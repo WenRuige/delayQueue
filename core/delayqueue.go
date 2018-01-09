@@ -9,19 +9,20 @@ import (
 	"queue/config"
 )
 
-//
 func Init() {
-	Handler()
+	InitTimer()
 }
 
-func getBucket() {
-
-}
-
-func Handler() {
-	err := getDataFromBucket(config.DefaultBucketName)
-	if err != nil {
-
+//timer 定时器,每两秒去请求一下handle方法
+func InitTimer() {
+	timer := time.NewTimer(time.Second * 2)
+	for {
+		select {
+		case <-timer.C:
+			println("2s timer")
+			handler()
+			timer.Reset(time.Second * 2)
+		}
 	}
 }
 
@@ -31,7 +32,26 @@ func Handler() {
 //回调该回调函数
 //回调成功后消除,若回调响应失败则进行重试
 //重试次数&重试间隔
+func handler() {
+	//处理器
+	bucket, err := getDataFromBucket(config.DefaultBucketName)
+	if err != nil {
+		log.Printf("扫描bucket为空%s", err.Error())
+		return
+	}
+	//如果篮子为空
+	if bucket == nil {
+		return
+	}
+	//@todo 这个时间需要精准
+	//if bucket.Timestamp > 1000 {
+	//
+	//}
+	//获取Job信息
+	println(bucket.Timestamp)
+}
 
+//push数据到redis中
 func Push(job model.Job) (error) {
 	//data,err:=exec("get","samplekey");
 	//valueBytes := data.([]byte)
@@ -40,7 +60,7 @@ func Push(job model.Job) (error) {
 	//@todo 对于这个id,应该是使用发号器来进行实现
 	job.Id = rand.New(rand.NewSource(time.Now().UnixNano())).Intn(100)
 	job.Topic = "TEST_TOPIC"
-	job.Delay = 30000
+	job.Delay = int(time.Now().Unix()) + 30*24*60
 	job.Body = ""
 	job.Callback = "http://www.baidu.com"
 
