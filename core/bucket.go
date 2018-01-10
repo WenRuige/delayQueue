@@ -5,8 +5,6 @@ import (
 	"queue/model"
 )
 
-
-
 //将job id 放入篮子中
 //实际上bucket里面的内容是有序切不重复的
 func pushBucket(key string, delayTime int, jobId int) error {
@@ -33,4 +31,10 @@ func getDataFromBucket(key string) (*model.BucketItem, error) {
 	item.Timestamp, _ = strconv.Atoi(timestampStr)
 	item.Jobid, _ = strconv.Atoi(jobIdStr)
 	return item, nil
+}
+
+//从篮子里面删除该数据
+func removeFromBucket(bucketName string, id int) error {
+	_, err := exec("ZREM", bucketName, id)
+	return err
 }

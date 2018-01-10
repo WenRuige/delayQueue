@@ -41,7 +41,6 @@ func handler() {
 	if bucket == nil {
 		return
 	}
-	println("hello world")
 	//@todo 这个时间需要精准,如果延迟时间大于当前时间,表示延迟时间未到
 	if bucket.Timestamp > int(time.Now().Unix()) {
 		return
@@ -51,12 +50,21 @@ func handler() {
 	if err != nil {
 		log.Printf("%s |job元信息为空", err.Error())
 	}
-	println(jobObj.Delay)
 	//check job delay和当前时间相比较
-	if jobObj.Delay > int(time.Now().Unix()){
+	if jobObj.Delay > int(time.Now().Unix()) {
 		//删除篮子内的时间
 		log.Printf("当前Job未到延时时间")
 	}
+
+	err = pushToReadyQueue(jobObj.Topic, jobObj.Id)
+	if err != nil {
+		log.Printf("放入ready queue error|%s|", err.Error())
+	}
+	err = removeFromBucket(config.DefaultBucketName, jobObj.Id)
+	if err != nil {
+		log.Printf("删除bucket失败|%s|", err.Error())
+	}
+	println("success")
 
 }
 
