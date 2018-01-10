@@ -5,9 +5,10 @@ import (
 	"queue/model"
 )
 
-//篮子
 
-//将job id 放入篮子中()
+
+//将job id 放入篮子中
+//实际上bucket里面的内容是有序切不重复的
 func pushBucket(key string, delayTime int, jobId int) error {
 	_, err := exec("ZADD", key, delayTime, jobId)
 	return err

@@ -12,7 +12,6 @@ type Cmd struct {
 }
 
 func (cmd *Cmd) Run() {
-
 	//获取cli 输入的数据
 	clearParams()
 	core.Push(model.Job{})

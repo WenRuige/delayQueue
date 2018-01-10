@@ -28,10 +28,8 @@ func InitTimer() {
 
 //创建一个timer 轮询bucket
 //查询bucket中最近的一个bucket _ job _ id
-//消费该id
-//回调该回调函数
-//回调成功后消除,若回调响应失败则进行重试
-//重试次数&重试间隔
+//消费该id,放入预备队列中
+
 func handler() {
 	//处理器
 	bucket, err := getDataFromBucket(config.DefaultBucketName)
@@ -43,25 +41,32 @@ func handler() {
 	if bucket == nil {
 		return
 	}
+	println("hello world")
 	//@todo 这个时间需要精准,如果延迟时间大于当前时间,表示延迟时间未到
 	if bucket.Timestamp > int(time.Now().Unix()) {
 		return
 	}
 	//获取Job信息
-	getJob(bucket.Jobid)
+	jobObj, err := getJob(bucket.Jobid)
+	if err != nil {
+		log.Printf("%s |job元信息为空", err.Error())
+	}
+	println(jobObj.Delay)
+	//check job delay和当前时间相比较
+	if jobObj.Delay > int(time.Now().Unix()){
+		//删除篮子内的时间
+		log.Printf("当前Job未到延时时间")
+	}
+
 }
 
 //push数据到redis中
 func Push(job model.Job) (error) {
-	//data,err:=exec("get","samplekey");
-	//valueBytes := data.([]byte)
-	//str := string(valueBytes[:])
-	//if err!= nil{}
 	//@todo 对于这个id,应该是使用发号器来进行实现
 	job.Id = rand.New(rand.NewSource(time.Now().UnixNano())).Intn(100)
 	job.Topic = "TEST_TOPIC"
 	job.Delay = int(time.Now().Unix()) + 30*24*60
-	job.Body = ""
+	job.Body = "hello world"
 	job.Callback = "http://www.baidu.com"
 
 	if job.Id == 0 || job.Topic == "" || job.Delay == 0 || job.Callback == "" {
@@ -72,7 +77,7 @@ func Push(job model.Job) (error) {
 		log.Printf("放入job poll error |%s", err.Error())
 		return err
 	}
-	//默认的Bucket
+	//默认的Bucket,此处建议由多个Bucket来组成
 	err = pushBucket(config.DefaultBucketName, job.Delay, job.Id)
 	if err != nil {
 		log.Printf("放入篮子error|%s", err.Error())

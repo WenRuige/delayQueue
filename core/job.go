@@ -3,7 +3,6 @@ package core
 import (
 	"queue/model"
 	"encoding/json"
-
 	"log"
 )
 
@@ -24,13 +23,21 @@ func putJob(jobId int, job model.Job) error {
 
 //获取当前Job
 func getJob(jobId int) (*model.Job, error) {
-	job, err := exec("get", jobId)
+	value, err := exec("get", jobId)
 	//判断是否error
 	if err != nil {
 		return nil, err
 	}
-	if job != nil {
+	//判断是否有数据
+	if value == nil {
 		return nil, nil
+	}
+	byteValue := value.([]byte)
+	job := &model.Job{}
+	//解析json
+	err = json.Unmarshal(byteValue, job)
+	if err != nil {
+		return nil, err
 	}
 	return job, err
 }
