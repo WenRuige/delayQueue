@@ -12,6 +12,13 @@ func pushBucket(key string, delayTime int, jobId int) error {
 	return err
 }
 
+
+
+//生成篮子序号
+func generateBucketName(){
+
+}
+
 //从bucket中获取数据()
 func getDataFromBucket(key string) (*model.BucketItem, error) {
 	res, err := exec("ZRANGE", key, 0, 0, "WITHSCORES")

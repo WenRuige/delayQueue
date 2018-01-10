@@ -1,6 +1,8 @@
 package main
 
-import "queue/cmd"
+import (
+	"queue/cmd"
+)
 
 func main() {
 	cmd := new(cmd.Cmd)
