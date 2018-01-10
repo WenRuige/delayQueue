@@ -21,3 +21,16 @@ func putJob(jobId int, job model.Job) error {
 	}
 	return nil
 }
+
+//获取当前Job
+func getJob(jobId int) (*model.Job, error) {
+	job, err := exec("get", jobId)
+	//判断是否error
+	if err != nil {
+		return nil, err
+	}
+	if job != nil {
+		return nil, nil
+	}
+	return job, err
+}

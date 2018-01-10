@@ -43,12 +43,12 @@ func handler() {
 	if bucket == nil {
 		return
 	}
-	//@todo 这个时间需要精准
-	//if bucket.Timestamp > 1000 {
-	//
-	//}
+	//@todo 这个时间需要精准,如果延迟时间大于当前时间,表示延迟时间未到
+	if bucket.Timestamp > int(time.Now().Unix()) {
+		return
+	}
 	//获取Job信息
-	println(bucket.Timestamp)
+	getJob(bucket.Jobid)
 }
 
 //push数据到redis中
