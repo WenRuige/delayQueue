@@ -12,17 +12,16 @@ import (
 var (
 	// 每个定时器对应一个bucket
 	timers         []*time.Ticker
-	bucketNameChan <- chan string
+	bucketNameChan <-chan string
 )
 
 func Init() {
 	InitTimer()
 	bucketNameChan = generateBucketName()
+	time.Sleep(time.Second * 1)
+	e := <-bucketNameChan
+	println(e)
 }
-
-
-
-
 
 //建立一个Timer
 func InitTimer() {
@@ -32,14 +31,14 @@ func InitTimer() {
 		go waitTicker(timers[i])
 	}
 	//需要阻塞一下timer来防止协程未执行完
-	time.Sleep(time.Second * 10)
+	//time.Sleep(time.Second * 1)
 }
 
 func waitTicker(timer *time.Ticker) {
 	for {
 		select {
 		case <-timer.C:
-			println("2s timer")
+			//println("2s timer")
 			//handler()
 		}
 	}
