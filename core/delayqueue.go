@@ -16,11 +16,10 @@ var (
 )
 
 func Init() {
-	InitTimer()
-	bucketNameChan = generateBucketName()
-	time.Sleep(time.Second * 1)
-	e := <-bucketNameChan
-	println(e)
+	//bucketNameChan = generateBucketName()
+	//e := <-bucketNameChan
+	//InitTimer()
+
 }
 
 //建立一个Timer
@@ -28,25 +27,25 @@ func InitTimer() {
 	timers = make([]*time.Ticker, 10)
 	for i := 0; i < 10; i++ {
 		timers[i] = time.NewTicker(1 * time.Second)
-		go waitTicker(timers[i])
+		go waitTicker(timers[i], <-bucketNameChan)
 	}
 	//需要阻塞一下timer来防止协程未执行完
-	//time.Sleep(time.Second * 1)
 }
 
-func waitTicker(timer *time.Ticker) {
+func waitTicker(timer *time.Ticker, bucketName string) {
 	for {
 		select {
-		case <-timer.C:
-			//println("2s timer")
-			//handler()
+		case timer := <-timer.C:
+			println(timer.Unix())
 		}
 	}
+	//time.Sleep(time.Second * 5)
 }
 
-func handler() {
+func handler(bucketName string) {
+	println("hello world")
 	//处理器
-	bucket, err := getDataFromBucket(config.DefaultBucketName)
+	bucket, err := getDataFromBucket(bucketName)
 	if err != nil {
 		log.Printf("扫描bucket为空%s", err.Error())
 		return
@@ -73,7 +72,7 @@ func handler() {
 	if err != nil {
 		log.Printf("放入ready queue error|%s|", err.Error())
 	}
-	err = removeFromBucket(config.DefaultBucketName, jobObj.Id)
+	err = removeFromBucket(bucketName, jobObj.Id)
 	if err != nil {
 		log.Printf("删除bucket失败|%s|", err.Error())
 	}
@@ -83,6 +82,7 @@ func handler() {
 
 //push数据到redis中
 func Push(job model.Job) (error) {
+
 	//@todo 对于这个id,应该是使用发号器来进行实现
 	//===========================     test case         =========================
 	job.Id = rand.New(rand.NewSource(time.Now().UnixNano())).Intn(100)
@@ -91,9 +91,11 @@ func Push(job model.Job) (error) {
 	job.Body = "hello world"
 	job.Callback = "http://www.baidu.com"
 	//===========================     test case end      ==========================
+
 	if job.Id == 0 || job.Topic == "" || job.Delay == 0 || job.Callback == "" {
 		return errors.New("有部分数据为空")
 	}
+
 	err := putJob(job.Id, job)
 	if err != nil {
 		log.Printf("放入job poll error |%s", err.Error())
@@ -101,6 +103,7 @@ func Push(job model.Job) (error) {
 	}
 	//默认的Bucket,此处建议由多个Bucket来组成
 	err = pushBucket(config.DefaultBucketName, job.Delay, job.Id)
+
 	if err != nil {
 		log.Printf("放入篮子error|%s", err.Error())
 		return err
