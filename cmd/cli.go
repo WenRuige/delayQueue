@@ -15,10 +15,12 @@ type Cmd struct {
 
 func (cmd *Cmd) Run() {
 	//获取cli 输入的数据
+	core.FlushDb()
 	clearParams()
 	core.Push(model.Job{})
 	//开启消费者的守护进程,进行消费
 	core.Init()
+
 	//util.Log.Printf("Server v%s pid=%d started with processes: %d", "1.00", os.Getpid(), runtime.GOMAXPROCS(runtime.NumCPU()))
 }
 

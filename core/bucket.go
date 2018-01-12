@@ -13,7 +13,8 @@ func pushBucket(key string, delayTime int, jobId int) error {
 	return err
 }
 
-//生成篮子序号
+//生成对应篮子的序号
+//@todo:有点问题,每次都是返回bucket1
 func generateBucketName() <-chan string {
 	c := make(chan string)
 	go func() {

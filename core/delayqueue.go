@@ -15,68 +15,80 @@ var (
 	bucketNameChan <-chan string
 )
 
+func FlushDb() {
+	exec("flushdb")
+}
+
 func Init() {
+
+	test()
 	//bucketNameChan = generateBucketName()
-	//e := <-bucketNameChan
 	//InitTimer()
 
 }
+func test() {
+	println("hhh")
+}
 
 //建立一个Timer
-func InitTimer() {
-	timers = make([]*time.Ticker, 10)
-	for i := 0; i < 10; i++ {
-		timers[i] = time.NewTicker(1 * time.Second)
-		go waitTicker(timers[i], <-bucketNameChan)
-	}
-	//需要阻塞一下timer来防止协程未执行完
-}
-
-func waitTicker(timer *time.Ticker, bucketName string) {
-	for {
-		select {
-		case timer := <-timer.C:
-			println(timer.Unix())
-		}
-	}
-	//time.Sleep(time.Second * 5)
-}
+//func InitTimer() {
+//	timers = make([]*time.Ticker, 3)
+//	for i := 0; i < 3; i++ {
+//		timers[i] = time.NewTicker(3 * time.Second)
+//		go waitTicker(timers[i], <-bucketNameChan)
+//	}
+//
+//	//time.Sleep(time.Second * 5)
+//	//需要阻塞一下timer来防止协程未执行完
+//}
+//
+//func waitTicker(timer *time.Ticker, bucketName string) {
+//	for {
+//		select {
+//		case <-timer.C:
+//			handler(bucketName)
+//		}
+//	}
+//
+//}
 
 func handler(bucketName string) {
-	println("hello world")
-	//处理器
-	bucket, err := getDataFromBucket(bucketName)
-	if err != nil {
-		log.Printf("扫描bucket为空%s", err.Error())
-		return
-	}
-	//如果篮子为空
-	if bucket == nil {
-		return
-	}
-	if bucket.Timestamp > int(time.Now().Unix()) {
-		return
-	}
-	//获取Job信息
-	jobObj, err := getJob(bucket.Jobid)
-	if err != nil {
-		log.Printf("%s |job元信息为空", err.Error())
-	}
-	//check job delay和当前时间相比较
-	if jobObj.Delay > int(time.Now().Unix()) {
-		//删除篮子内的时间
-		log.Printf("当前Job未到延时时间")
-	}
+	for {
+		println("hello world")
+		//处理器
+		bucket, err := getDataFromBucket(bucketName)
+		if err != nil {
+			log.Printf("扫描bucket为空%s", err.Error())
+			return
+		}
+		//如果篮子为空
+		if bucket == nil {
+			return
+		}
+		if bucket.Timestamp > int(time.Now().Unix()) {
+			return
+		}
+		//获取Job信息
+		jobObj, err := getJob(bucket.Jobid)
+		if err != nil {
+			log.Printf("%s |job元信息为空", err.Error())
+		}
+		//check job delay和当前时间相比较
+		if jobObj.Delay > int(time.Now().Unix()) {
+			//删除篮子内的时间
+			log.Printf("当前Job未到延时时间")
+		}
 
-	err = pushToReadyQueue(jobObj.Topic, jobObj.Id)
-	if err != nil {
-		log.Printf("放入ready queue error|%s|", err.Error())
+		err = pushToReadyQueue(jobObj.Topic, jobObj.Id)
+		if err != nil {
+			log.Printf("放入ready queue error|%s|", err.Error())
+		}
+		err = removeFromBucket(bucketName, jobObj.Id)
+		if err != nil {
+			log.Printf("删除bucket失败|%s|", err.Error())
+		}
+		println("success")
 	}
-	err = removeFromBucket(bucketName, jobObj.Id)
-	if err != nil {
-		log.Printf("删除bucket失败|%s|", err.Error())
-	}
-	println("success")
 
 }
 
