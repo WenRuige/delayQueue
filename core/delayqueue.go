@@ -20,14 +20,20 @@ func FlushDb() {
 }
 
 func Init() {
+	InitTimer()
 
-	test()
-	//bucketNameChan = generateBucketName()
-	//InitTimer()
+
 
 }
-func test() {
-	println("hhh")
+func InitTimer() {
+	//一个三秒的定时器
+	t := time.NewTicker(3 * time.Second)
+	for {
+		select {
+		case <-t.C:
+			go handler(config.DefaultBucketName)
+		}
+	}
 }
 
 //建立一个Timer
@@ -54,7 +60,6 @@ func test() {
 
 func handler(bucketName string) {
 	for {
-		println("hello world")
 		//处理器
 		bucket, err := getDataFromBucket(bucketName)
 		if err != nil {
@@ -78,7 +83,6 @@ func handler(bucketName string) {
 			//删除篮子内的时间
 			log.Printf("当前Job未到延时时间")
 		}
-
 		err = pushToReadyQueue(jobObj.Topic, jobObj.Id)
 		if err != nil {
 			log.Printf("放入ready queue error|%s|", err.Error())
@@ -87,7 +91,6 @@ func handler(bucketName string) {
 		if err != nil {
 			log.Printf("删除bucket失败|%s|", err.Error())
 		}
-		println("success")
 	}
 
 }

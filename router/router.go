@@ -7,6 +7,16 @@ import (
 )
 
 
+
+
+
+
+
+
+
+func Push(){
+
+}
 func generateResponseBody(errno int, msg string, data interface{}) ([]byte) {
 	body := &model.ResponseBody{
 	}
