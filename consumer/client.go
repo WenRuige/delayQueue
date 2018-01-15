@@ -11,11 +11,9 @@ func Init() {
 
 //开启消费进程
 func consume(topic string) {
-	//println("hello world_________________________")
 
-	for {
-		println("fqqqqq")
-	}
+	//for {
+	//
+	//}
 	core.GetReadyQueue(topic)
-
 }

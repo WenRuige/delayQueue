@@ -78,7 +78,6 @@ func Push(job model.Job) (error) {
 	if job.Id == 0 || job.Topic == "" || job.Delay == 0 || job.Callback == "" {
 		return errors.New("有部分数据为空")
 	}
-	println(job.Id)
 	err := putJob(job.Id, job)
 	if err != nil {
 		log.Printf("放入job poll error |%s", err.Error())
