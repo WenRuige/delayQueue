@@ -10,7 +10,7 @@ import (
 //go http request
 func (cmd *Cmd) WebRequest(data string) {
 	http.HandleFunc("/push", router.Push)
-	log.Printf("listen %s\n", config.BindAdress)
-	err := http.ListenAndServe(config.BindAdress, nil)
+	log.Printf("listen %s\n", config.BindAddress)
+	err := http.ListenAndServe(config.BindAddress, nil)
 	log.Fatalln(err)
 }

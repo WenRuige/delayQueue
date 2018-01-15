@@ -7,3 +7,7 @@ func pushToReadyQueue(topic string, id int) error {
 	_, err := exec("RPUSH", topic, id)
 	return err
 }
+
+func GetReadyQueue(topic string) error {
+return nil
+}
