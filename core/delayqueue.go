@@ -14,21 +14,18 @@ func FlushDb() {
 }
 
 func Init() {
-	RedisPool = initRedisPool()
-	InitTimer()
-
+	go InitTimer()
 }
 func InitTimer() {
 	//一个三秒的定时器
-	//println("hello")
-	//t := time.NewTicker(1 * time.Second)
-	//for {
-	//	select {
-	//	case <-t.C:
-	//		handler(config.DefaultBucketName)
-	//	}
-	//}
-	handler(config.DefaultBucketName)
+	t := time.NewTicker(1 * time.Second)
+	for {
+		select {
+		case <-t.C:
+			println("fq")
+			 handler(config.DefaultBucketName)
+		}
+	}
 }
 
 func handler(bucketName string) {
@@ -64,6 +61,7 @@ func handler(bucketName string) {
 	if err != nil {
 		log.Printf("删除bucket失败|%s|", err.Error())
 	}
+	return
 
 }
 

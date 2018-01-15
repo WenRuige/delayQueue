@@ -11,6 +11,7 @@ func (cmd *Cmd) Run() {
 	getParams()
 	//开启消费者的守护进程,进行消费
 	core.Init()
+	println("open web")
 	cmd.WebRequest(getParams())
 	//util.Log.Printf("Server v%s pid=%d started with processes: %d", "1.00", os.Getpid(), runtime.GOMAXPROCS(runtime.NumCPU()))
 }

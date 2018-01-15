@@ -13,24 +13,6 @@ func pushBucket(key string, delayTime int, jobId int) error {
 	return err
 }
 
-//生成对应篮子的序号
-//@todo:有点问题,每次都是返回bucket1
-//func generateBucketName() <-chan string {
-//	c := make(chan string)
-//	go func() {
-//		i := 1
-//		for {
-//			c <- config.DefaultBucketName + strconv.Itoa(i)
-//			if i >= 10 {
-//				i = 1
-//			} else {
-//				i++
-//			}
-//		}
-//	}()
-//	return c
-//}
-
 //从bucket中获取数据()
 func getDataFromBucket(key string) (* model.BucketItem, error) {
 	res, err := exec("ZRANGE", key, 0, 0, "WITHSCORES")
