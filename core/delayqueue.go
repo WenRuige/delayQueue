@@ -27,36 +27,16 @@ func Init() {
 }
 func InitTimer() {
 	//一个三秒的定时器
+	println("hello")
 	t := time.NewTicker(3 * time.Second)
 	for {
 		select {
 		case <-t.C:
-			go handler(config.DefaultBucketName)
+			 handler(config.DefaultBucketName)
 		}
 	}
 }
 
-//建立一个Timer
-//func InitTimer() {
-//	timers = make([]*time.Ticker, 3)
-//	for i := 0; i < 3; i++ {
-//		timers[i] = time.NewTicker(3 * time.Second)
-//		go waitTicker(timers[i], <-bucketNameChan)
-//	}
-//
-//	//time.Sleep(time.Second * 5)
-//	//需要阻塞一下timer来防止协程未执行完
-//}
-//
-//func waitTicker(timer *time.Ticker, bucketName string) {
-//	for {
-//		select {
-//		case <-timer.C:
-//			handler(bucketName)
-//		}
-//	}
-//
-//}
 
 func handler(bucketName string) {
 	for {

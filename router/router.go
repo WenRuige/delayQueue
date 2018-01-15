@@ -6,19 +6,17 @@ import (
 	"log"
 	"net/http"
 	//"queue/core"
+	//"queue/core"
 )
 
 //主动push
 func Push(resp http.ResponseWriter, req *http.Request) {
 	//若是get方法
-	if req.Method == "GET" {
-		req.ParseForm()
-		res := req.Form["data"][0]
-		println(res)
-	}
+	println("hello world")
+
 
 	//core.Push()
-	resp.Write(generateSuccessBody("success", ""))
+	//resp.Write(generateSuccessBody("success", ""))
 }
 func generateResponseBody(errno int, msg string, data interface{}) ([]byte) {
 	body := &model.ResponseBody{
