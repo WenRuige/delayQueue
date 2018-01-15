@@ -7,16 +7,30 @@ import (
 	"net/http"
 	//"queue/core"
 	//"queue/core"
+
+	"queue/core"
 )
 
 //主动push
 func Push(resp http.ResponseWriter, req *http.Request) {
 	//若是get方法
-	println("hello world")
+	if req.Method == "POST" {
+		// receive posted data
+		value := req.FormValue("data")
+		job := &model.Job{}
+		byteValue := []byte(value)
+		err := json.Unmarshal(byteValue, job)
+		if err != nil {
+			resp.Write(generateFailureBody("解析Json失败"))
+		}
+		err = core.Push(* job)
+		if err != nil {
+			println("error")
+		}
 
-
-	//core.Push()
-	//resp.Write(generateSuccessBody("success", ""))
+	} else {
+		resp.Write(generateFailureBody("error request method"))
+	}
 }
 func generateResponseBody(errno int, msg string, data interface{}) ([]byte) {
 	body := &model.ResponseBody{
