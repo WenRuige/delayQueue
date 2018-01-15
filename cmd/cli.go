@@ -1,6 +1,9 @@
 package cmd
 
-import "queue/core"
+import (
+	"queue/core"
+	"queue/consumer"
+)
 
 type Cmd struct {
 }
@@ -9,11 +12,15 @@ func (cmd *Cmd) Run() {
 	//获取cli 输入的数据
 	//core.FlushDb()
 	getParams()
-	//开启消费者的守护进程,进行消费
+	//开启生产者
 	core.Init()
-	println("open web")
+	//开启消费者
+	consumer.Init()
+	//启动web端
 	cmd.WebRequest(getParams())
-	//util.Log.Printf("Server v%s pid=%d started with processes: %d", "1.00", os.Getpid(), runtime.GOMAXPROCS(runtime.NumCPU()))
+
+	//消费
+
 }
 
 func getParams() string {
