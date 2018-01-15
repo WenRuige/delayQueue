@@ -25,7 +25,6 @@ func GetReadyQueue(topic string) (error) {
 	if err != nil {
 		errors.New("LPOP ERROR")
 	}
-	println("队列为空")
 	if res == nil {
 		return nil
 	}
@@ -35,7 +34,6 @@ func GetReadyQueue(topic string) (error) {
 	if err != nil {
 		errors.New("转换失败")
 	}
-
 	job, err := getJob(result)
 	if err != nil {
 
@@ -49,6 +47,7 @@ func GetReadyQueue(topic string) (error) {
 
 //回调方法
 func httpPost(job model.Job) {
+	println(job.Callback)
 	tmp, err := json.Marshal(job)
 	if err != nil {
 		errors.New("Json 解析失败")
@@ -57,6 +56,7 @@ func httpPost(job model.Job) {
 
 	if err != nil {
 		// handle error
+		errors.New("http post request error")
 	}
 
 	defer resp.Body.Close()
