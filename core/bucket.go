@@ -3,7 +3,7 @@ package core
 import (
 	"strconv"
 	"queue/model"
-	"queue/config"
+	//"queue/config"
 )
 
 //将job id 放入篮子中
@@ -15,24 +15,24 @@ func pushBucket(key string, delayTime int, jobId int) error {
 
 //生成对应篮子的序号
 //@todo:有点问题,每次都是返回bucket1
-func generateBucketName() <-chan string {
-	c := make(chan string)
-	go func() {
-		i := 1
-		for {
-			c <- config.DefaultBucketName + strconv.Itoa(i)
-			if i >= 10 {
-				i = 1
-			} else {
-				i++
-			}
-		}
-	}()
-	return c
-}
+//func generateBucketName() <-chan string {
+//	c := make(chan string)
+//	go func() {
+//		i := 1
+//		for {
+//			c <- config.DefaultBucketName + strconv.Itoa(i)
+//			if i >= 10 {
+//				i = 1
+//			} else {
+//				i++
+//			}
+//		}
+//	}()
+//	return c
+//}
 
 //从bucket中获取数据()
-func getDataFromBucket(key string) (*model.BucketItem, error) {
+func getDataFromBucket(key string) (* model.BucketItem, error) {
 	res, err := exec("ZRANGE", key, 0, 0, "WITHSCORES")
 	if err != nil {
 		return nil, err
@@ -43,6 +43,9 @@ func getDataFromBucket(key string) (*model.BucketItem, error) {
 	var valueBytes []interface{}
 	valueBytes = res.([]interface{})
 	//change byte to string
+	if len(valueBytes) == 0 {
+		return nil, nil
+	}
 	timestampStr := string(valueBytes[1].([]byte))
 	jobIdStr := string(valueBytes[0].([]byte))
 	//add a bucket

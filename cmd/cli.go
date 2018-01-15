@@ -1,20 +1,17 @@
 package cmd
 
+import "queue/core"
+
 type Cmd struct {
 }
 
 func (cmd *Cmd) Run() {
 	//获取cli 输入的数据
-
 	//core.FlushDb()
-
 	getParams()
-
-	//core.Push(model.Job{})
 	//开启消费者的守护进程,进行消费
+	core.Init()
 	cmd.WebRequest(getParams())
-	//core.Init()
-
 	//util.Log.Printf("Server v%s pid=%d started with processes: %d", "1.00", os.Getpid(), runtime.GOMAXPROCS(runtime.NumCPU()))
 }
 
