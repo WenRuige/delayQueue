@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"net/http"
 	"queue/model"
-	"github.com/gin-gonic/gin/json"
+	"encoding/json"
 )
 
 //预备队列
@@ -36,17 +36,17 @@ func GetReadyQueue(topic string) (error) {
 	}
 	job, err := getJob(result)
 	if err != nil {
-
+		errors.New("get job error")
 	}
-	httpPost(*job)
-
-	//先回调该接口
-
+	err = httpPost(*job)
+	if err != nil {
+		errors.New("http post error")
+	}
 	return nil
 }
 
 //回调方法
-func httpPost(job model.Job) {
+func httpPost(job model.Job) error {
 	println(job.Callback)
 	tmp, err := json.Marshal(job)
 	if err != nil {
@@ -55,15 +55,15 @@ func httpPost(job model.Job) {
 	resp, err := http.PostForm(job.Callback, url.Values{"key": {"Value"}, "data": {string(tmp)}})
 
 	if err != nil {
-		// handle error
 		errors.New("http post request error")
 	}
-
 	defer resp.Body.Close()
+	//需要看一下http头是否返回200
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		// handle error
 	}
 
 	fmt.Println(string(body))
+	return nil
 }
