@@ -29,6 +29,16 @@ func Push(resp http.ResponseWriter, req *http.Request) {
 		resp.Write(generateFailureBody("error request method"))
 	}
 }
+
+func Consume(resp http.ResponseWriter, req *http.Request) {
+
+	if req.Method == "POST" {
+		println("回调成功~")
+	} else {
+		resp.Write(generateFailureBody("error request method"))
+	}
+
+}
 func generateResponseBody(errno int, msg string, data interface{}) ([]byte) {
 	body := &model.ResponseBody{
 	}
