@@ -16,6 +16,7 @@ func FlushDb() {
 func Init() {
 	go InitTimer()
 }
+//定时器
 func InitTimer() {
 	//一个三秒的定时器
 	t := time.NewTicker(1 * time.Second)
