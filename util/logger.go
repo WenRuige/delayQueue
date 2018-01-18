@@ -2,8 +2,6 @@ package util
 
 import (
 	"log"
-	"go/build"
-	"flag"
 	"os"
 )
 
@@ -12,14 +10,12 @@ var (
 )
 
 //创建Log
-func init() {
-	var logPath = build.Default.GOPATH + "/src/queue/log/info.log"
-	flag.Parse()
-	flag.Parse()
+func Init() {
+	logPath := "log.log"
 	var file, err = os.Create(logPath)
 	if err != nil {
 		panic(err)
 	}
 	Log = log.New(file, "", log.LstdFlags|log.Lshortfile)
-	Log.Println("LogFile : " + logPath)
+
 }

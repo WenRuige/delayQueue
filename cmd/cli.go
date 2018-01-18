@@ -3,6 +3,7 @@ package cmd
 import (
 	"queue/core"
 	"queue/consumer"
+	"queue/util"
 )
 
 type Cmd struct {
@@ -10,6 +11,9 @@ type Cmd struct {
 
 func (cmd *Cmd) Run() {
 	//获取cli 输入的数据
+
+	util.Init()
+
 	//core.FlushDb()
 	getParams()
 	//开启生产者

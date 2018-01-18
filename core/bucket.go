@@ -3,7 +3,7 @@ package core
 import (
 	"strconv"
 	"queue/model"
-	//"queue/config"
+
 )
 
 //将job id 放入篮子中
